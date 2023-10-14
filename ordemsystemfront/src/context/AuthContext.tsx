@@ -8,6 +8,8 @@ interface AuthContextProps {
   user: UserProps
   isAuthenticated: boolean
   signIn: (credentials: SignInProps) => Promise<void>
+  signUp: (credentials: SignUpProps) => Promise<void>
+  logout: () => Promise<void>
 }
 
 interface UserProps {
@@ -26,6 +28,13 @@ interface SubscriptionsProps {
 type AuthProviderProps = {
   children: ReactNode
 }
+
+interface SignUpProps {
+  name: string
+  email: string,
+  password: string
+}
+
 
 interface SignInProps {
   email: string,
@@ -74,8 +83,34 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }
 
+  async function signUp({ name, email, password }: SignUpProps) {
+    try {
+
+      const res = api.post('/users', {
+        name, email, password
+      })
+
+      Router.push('/')
+    } catch (error) {
+      console.log('Erro in signUp')
+    }
+  }
+
+  async function logOut() {
+    try {
+      destroyCookie(null, '@login.token', { path: '/' })
+      Router.push('/')
+    } catch (error) {
+      console.log('Erro logout')
+    }
+  }
+
+
+
+
+
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, signIn }}>
+    <AuthContext.Provider value={{ user, isAuthenticated, signIn, signUp, logOut }}>
       {children}
     </AuthContext.Provider>
   )

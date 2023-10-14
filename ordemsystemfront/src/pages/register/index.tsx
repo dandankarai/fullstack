@@ -1,19 +1,27 @@
+import { AuthContext } from "@/context/AuthContext";
 import Link from "next/link";
-import { useState } from "react";
+import { useContext, useState } from "react";
 
 export default function Register() {
+
+  const { signUp } = useContext(AuthContext)
+
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [userName, setUserName] = useState('')
+  const [name, setName] = useState('')
 
-  function handleRegister() {
-    alert('Registro')
+  async function handleRegister() {
+    if (name === '' && email === '' && password === '') {
+      return
+    }
+
+    await signUp({ name, email, password })
   }
 
   return (
     <div className="flex flex-col justify-center h-screen gap-4 items-center">
 
-      <input type="text" value={userName} onChange={(ev) => setUserName(ev.target.value)} placeholder="Username" className="bg-gray-900 w-96 rounded h-10 text-white pl-3 placeholder-white" />
+      <input type="text" value={name} onChange={(ev) => setName(ev.target.value)} placeholder="Username" className="bg-gray-900 w-96 rounded h-10 text-white pl-3 placeholder-white" />
 
 
       <input type="text" value={email} onChange={(ev) => setEmail(ev.target.value)} placeholder="Email" className="bg-gray-900 w-96 rounded h-10 text-white pl-3 placeholder-white" />
@@ -26,6 +34,6 @@ export default function Register() {
       <Link href='/'>
         <p>Have account? <strong>Login</strong> </p>
       </Link>
-    </div>
+    </div >
   )
 }
