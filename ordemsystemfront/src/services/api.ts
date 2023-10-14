@@ -1,9 +1,8 @@
 import { signOut } from "@/context/AuthContext";
 import axios, { AxiosError } from "axios";
-import { error } from "console";
 import { parseCookies } from "nookies";
 
-export function apiClient(context = undefined) {
+export function setupApiClient(context = undefined) {
   let cookies = parseCookies(context);
 
   const api = axios.create({
@@ -28,4 +27,6 @@ export function apiClient(context = undefined) {
       return Promise.reject(error);
     }
   );
+
+  return api;
 }
