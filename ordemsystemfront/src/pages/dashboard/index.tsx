@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { useState } from "react";
 
+import { onlyUserAuthenticated } from "@/utils/onlyUserAuthenticated";
+
 export default function Register() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -16,3 +18,12 @@ export default function Register() {
     </div>
   )
 }
+
+//First return getServer and verify if is logged and only then return dashboard
+export const getServerSideProps = onlyUserAuthenticated(async (context) => {
+  return {
+    props: {
+
+    }
+  }
+})

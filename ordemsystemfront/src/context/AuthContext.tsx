@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useContext, useState } from 'react'
+import { createContext, ReactNode, useContext, useEffect, useState } from 'react'
 import { destroyCookie, setCookie } from 'nookies'
 import Router from 'next/router'
 import { api } from '../services/apiClient'
@@ -58,6 +58,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<UserProps>()
   const isAuthenticated = !!user
 
+
   async function signIn({ email, password }: SignInProps) {
     try {
 
@@ -104,10 +105,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
       console.log('Erro logout')
     }
   }
-
-
-
-
 
   return (
     <AuthContext.Provider value={{ user, isAuthenticated, signIn, signUp, logOut }}>
