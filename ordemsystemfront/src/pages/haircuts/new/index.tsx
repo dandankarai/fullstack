@@ -69,14 +69,7 @@ export default function New({ subscription, count }: NewHaircutProps) {
             className="bg-orange-400 rounded h-10 text-lg hover:bg-slate-400 w-4/5" >
             Register
           </button>
-          {!subscription && count >= 3 && (
-            <div>
-              <p>{`You've reached your haircut limit`}</p>
-              <a onClick={() => alert('Soon, upgrade account')}>
-                <p>Upgrade account</p>
-              </a>
-            </div>
-          )}
+
         </div>
       </div>
     </>
@@ -85,10 +78,9 @@ export default function New({ subscription, count }: NewHaircutProps) {
 
 //First return getServer and verify if is logged and only then return dashboard
 export const getServerSideProps = onlyUserAuthenticated(async (context) => {
-
   try {
 
-    const apiClient = setupApiClient()
+    const apiClient = setupApiClient(context)
 
     const res = await apiClient.get('/haircut/check')
     const countHaircut = await apiClient.get('/haircut/count')

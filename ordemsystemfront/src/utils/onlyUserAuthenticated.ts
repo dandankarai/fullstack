@@ -6,10 +6,12 @@ import {
 import { destroyCookie, parseCookies } from "nookies";
 import { TokenErros } from "@/services/tokenErrors";
 
-export function onlyUserAuthenticated<P>(fn: GetServerSideProps<P>) {
-  return async (
-    context: GetServerSidePropsContext
-  ): Promise<GetServerSidePropsResult<P>> => {
+export function onlyUserAuthenticated<P extends { [key: string]: any }>(
+  fn: (
+    context: GetServerSidePropsContext<P>
+  ) => Promise<GetServerSidePropsResult<P>>
+) {
+  return async (context) => {
     const cookies = parseCookies(context);
 
     const token = cookies[`@login.token`];

@@ -3,11 +3,22 @@ import { useState } from "react";
 import { IoMdPricetag } from 'react-icons/io'
 import { onlyUserAuthenticated } from "@/utils/onlyUserAuthenticated";
 import NavBar from "@/components/navbar";
+import { setupApiClient } from "@/services/api";
 
-export default function Haircuts() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [userName, setUserName] = useState('')
+interface HaircutsItemProps {
+  id: string,
+  name: string,
+  price: number | string
+  status: boolean
+  user_id: string
+}
+
+interface HaircutsProps {
+  haircuts: HaircutsItemProps[]
+}
+
+export default function Haircuts({ haircuts }: HaircutsProps) {
+  const [haircutList, setHaircutList] = useState<HaircutsItemProps[]>(haircuts || [])
 
   return (
     <>
@@ -26,20 +37,52 @@ export default function Haircuts() {
           <Link href='/haircuts/new' className="flex justify-center items-center bg-orange-400 rounded h-10 hover:bg-slate-400 w-48" >Register new haircut</Link>
         </div>
 
-        <Link className="w-4/5 flex justify-around bg-slate-600 h-10 rounded items-center" href='/haircuts/123'>
-          <div className="flex w-4/5 gap-2 items-center">
-            <IoMdPricetag color='#FBA931' />
-            <p>Pixie cut</p>
-          </div>
-          <p>USD 20.00</p>
-        </Link>
+        {haircutList.map(haircut => (
+          <Link key={haircut.id} className="w-4/5 flex justify-around bg-slate-600 h-10 rounded items-center" href={`/haircuts/${haircut.id}`}>
+            <div className="flex w-4/5 gap-2 items-center">
+              <IoMdPricetag color='#FBA931' />
+              <p>{haircut.name}</p>
+            </div>
+            <p>USD: {haircut.price}</p>
+          </Link>
+        ))}
       </div>
     </>
   )
 }
 
+
 //First return getServer and verify if is logged and only then return dashboard
 export const getServerSideProps = onlyUserAuthenticated(async (context) => {
+
+  try {
+
+    const apiClient = setupApiClient(context)
+
+    const res = await apiClient.get('/haircuts', {
+      params: {
+        status: true
+      }
+    })
+    console.log(`aaaaaaaaaaaaaaaaaaaaaaaaaa`, res.data)
+
+    if (res.data === null) {
+      return {
+        redirect: {
+          destination: '/dashboard',
+          permanent: false
+        }
+      }
+    }
+    return {
+      props: {
+        haircuts: res.data
+      }
+    }
+
+  } catch (error) {
+    console.log(error)
+  }
   return {
     props: {
 
