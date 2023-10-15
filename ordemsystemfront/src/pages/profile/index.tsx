@@ -21,11 +21,25 @@ interface ProfileUserProps {
 export default function Profile({ user, premium }: ProfileUserProps) {
   const { logout } = useContext(AuthContext)
 
-  const [nameBarber, setNameBarber] = useState(user?.name)
-  const [address, setAddress] = useState(user?.address)
+  const [nameBarber, setNameBarber] = useState(user && user?.name)
+  const [address, setAddress] = useState(user && user?.address)
 
-  async function handleLogout() {
-    await logout()
+  async function updateAccount() {
+    if (!nameBarber) return
+
+
+    const apiClient = setupApiClient()
+
+    try {
+      await apiClient.put('/users', {
+        name: nameBarber,
+        address: address
+      })
+
+      alert('Update with sucess')
+    } catch (error) {
+      console.log('Error safe infos')
+    }
   }
 
   return (
@@ -50,7 +64,7 @@ export default function Profile({ user, premium }: ProfileUserProps) {
             </a>
           </div>
 
-          <button className="mt-3 mb-4 bg-orange-400 hover:bg-orange-200   rounded h-10 font-bold">Safe</button>
+          <button onClick={updateAccount} className="mt-3 mb-4 bg-orange-400 hover:bg-orange-200   rounded h-10 font-bold">Safe</button>
         </div>
       </div >
     </>
