@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { IoMdPricetag } from 'react-icons/io'
 import { onlyUserAuthenticated } from "@/utils/onlyUserAuthenticated";
 import NavBar from "@/components/navbar";
@@ -20,13 +20,46 @@ interface HaircutsProps {
 export default function Haircuts({ haircuts }: HaircutsProps) {
   const [haircutList, setHaircutList] = useState<HaircutsItemProps[]>(haircuts || [])
 
+  const [disableHaircuts, setDisableHaircuts] = useState('enabled')
+
+  async function handleDisableList(ev: ChangeEvent<HTMLInputElement>) {
+
+    const apiClient = setupApiClient()
+
+    if (ev.target.value === 'disable') {
+      setDisableHaircuts('enabled')
+
+      const res = await apiClient.get('/haircuts', {
+        params: {
+          status: true
+        }
+      })
+
+      setHaircutList(res.data)
+    } else {
+      setDisableHaircuts('disable')
+      const res = await apiClient.get('/haircuts', {
+        params: {
+          status: false
+        }
+      })
+
+      setHaircutList(res.data)
+    }
+  }
+
   return (
     <>
       <NavBar />
       <div className="flex flex-col justify-center gap-4 items-center">
         <div className="flex justify-end mt-24 w-4/5 items-end">
           <label className="relative inline-flex items-center mb-5 cursor-pointer">
-            <input type="checkbox" value="" className="sr-only peer" />
+            <input type="checkbox"
+              value={disableHaircuts}
+              onChange={(ev: ChangeEvent<HTMLInputElement>) => handleDisableList(ev)}
+              className="sr-only peer"
+              checked={disableHaircuts === 'disable' ? false : true}
+            />
             <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
             <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">Active</span>
           </label>
@@ -64,7 +97,6 @@ export const getServerSideProps = onlyUserAuthenticated(async (context) => {
         status: true
       }
     })
-    console.log(`aaaaaaaaaaaaaaaaaaaaaaaaaa`, res.data)
 
     if (res.data === null) {
       return {
