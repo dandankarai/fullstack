@@ -2,7 +2,7 @@ import Link from "next/link";
 import { useState } from "react";
 
 import { onlyUserAuthenticated } from "@/utils/onlyUserAuthenticated";
-import Sidebar from "@/components/sidebar";
+import NavBar from "@/components/navbar";
 
 export default function Register() {
   const [email, setEmail] = useState('')
@@ -14,10 +14,12 @@ export default function Register() {
   }
 
   return (
-    <div className="flex flex-col justify-center h-screen gap-4 items-center">
-      <h1>Tela de dashboard</h1>
-      <Sidebar />
-    </div>
+    <>
+      <NavBar />
+      <div className="flex justify-center gap-4 items-center">
+        <h1>Tela de dashboard</h1>
+      </div>
+    </>
   )
 }
 

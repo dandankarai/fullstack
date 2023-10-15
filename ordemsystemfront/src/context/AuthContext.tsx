@@ -97,17 +97,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }
 
-  async function logOut() {
-    try {
-      destroyCookie(null, '@login.token', { path: '/' })
-      Router.push('/')
-    } catch (error) {
-      console.log('Erro logout')
-    }
-  }
-
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, signIn, signUp, logOut }}>
+    <AuthContext.Provider value={{ user, isAuthenticated, signIn, signUp, }}>
       {children}
     </AuthContext.Provider>
   )
