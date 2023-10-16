@@ -2,8 +2,8 @@ import prismaClient from "../../prisma";
 
 interface NewScheduleServiceProps {
   user_id: string;
-  haircut_id: string;
-  customer: string;
+  haircut_id?: string;
+  customer?: string;
 }
 
 class NewScheduleService {

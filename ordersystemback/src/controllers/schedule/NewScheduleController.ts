@@ -9,9 +9,9 @@ class NewScheduleController {
     const createSchedule = new NewScheduleService();
 
     const schedule = await createSchedule.execute({
-      customer,
-      haircut_id,
       user_id,
+      haircut_id,
+      customer,
     });
 
     return res.json(schedule);
