@@ -70,8 +70,8 @@ export default function EditHairCut({ subscription, haircut }: EditHaircutProps)
   return (
     <>
       <NavBar />
-      <div className="flex flex-col justify-start m-5">
-        <div className="flex flex-row items-center">
+      <div className="flex flex-col items-center justify-center m-5">
+        <div className="flex flex-row items-start max-w-3xl w-screen">
           <Link href='/haircuts'>
             <button className="flex items-center justify-center gap-1 bg-slate-500 rounded w-16 mr-4">
               <FiChevronLeft />
