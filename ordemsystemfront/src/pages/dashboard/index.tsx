@@ -5,9 +5,6 @@ import { onlyUserAuthenticated } from "@/utils/onlyUserAuthenticated";
 import NavBar from "@/components/navbar";
 import { setupApiClient } from "@/services/api";
 
-import { Modal, Ripple } from 'tw-elements'
-import { ModalInfo } from "@/components/modal";
-
 export interface ScheduleItemProps {
   id: string,
   customer: string
@@ -35,7 +32,6 @@ export default function Register({ schedule }: UserDashboardProps) {
           <h1 className="text-orange-400 text-3xl" >Schedule</h1>
           <Link href='/new' className="flex justify-center items-center bg-orange-400 rounded h-10 hover:bg-slate-400 w-48" >Register</Link>
         </div>
-        <Modal />
         {listUser.map(user => (
           <Link
             key={user.id}
