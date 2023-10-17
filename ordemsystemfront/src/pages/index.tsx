@@ -18,6 +18,7 @@ export default function Login() {
   return (
     <div className="flex flex-col h-screen gap-4 items-center justify-center">
       <input
+        data-testid='inputEmail'
         type="email"
         value={email}
         onChange={(ev) => setEmail(ev.target.value)}
@@ -26,6 +27,7 @@ export default function Login() {
       />
 
       <input
+        data-testid='inputPassword'
         type="password"
         value={password}
         onChange={(ev) => setPassword(ev.target.value)}
@@ -34,13 +36,14 @@ export default function Login() {
       />
 
       <button
+        data-testid='buttonLogin'
         onClick={handleLogin}
         className="bg-orange-400 rounded h-10 text-lg hover:bg-slate-400 w-96"
       >
         Login
       </button>
 
-      <Link href="/register">
+      <Link data-testid='buttonRegister' href="/register">
         <p>
           Do not have account? <strong>Register</strong>
         </p>

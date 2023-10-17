@@ -69,6 +69,7 @@ export default function NewSchedule({ haircuts }: HaircutsProps) {
           <h1 className="mb-4">New service costumer</h1>
 
           <input
+            data-test-id='inputNameCustomer'
             type="text"
             value={customer}
             onChange={(ev) => setCustomer(ev.target.value)}
@@ -80,6 +81,7 @@ export default function NewSchedule({ haircuts }: HaircutsProps) {
             ))}
           </select>
           <button
+            data-testid='registerButtonNewSchedule'
             onClick={handleRegister}
             className="bg-orange-400 rounded h-10 text-lg hover:bg-slate-400 w-4/5" >
             Register

@@ -19,7 +19,6 @@ interface ProfileUserProps {
   premium: boolean
 }
 export default function Profile({ user, premium }: ProfileUserProps) {
-  const { logout } = useContext(AuthContext)
 
   const [nameBarber, setNameBarber] = useState(user && user?.name)
   const [address, setAddress] = useState(user && user?.address)
@@ -49,17 +48,17 @@ export default function Profile({ user, premium }: ProfileUserProps) {
         <div className="flex flex-col">
 
           <p className="mb-2 font-bold text-white">Name of your barber:</p>
-          <input type="text" value={nameBarber} onChange={(ev) => setNameBarber(ev.target.value)} placeholder="Name your barber" className="bg-gray-900 w-96 rounded h-10 text-white pl-3 placeholder-white mb-4" />
+          <input data-testid='nameBarber' type="text" value={nameBarber} onChange={(ev) => setNameBarber(ev.target.value)} placeholder="Name your barber" className="bg-gray-900 w-96 rounded h-10 text-white pl-3 placeholder-white mb-4" />
 
           <p className="mb-2 font-bold text-white">Address:</p>
-          <input type="text" value={address} onChange={(ev) => setAddress(ev.target.value)} placeholder="Adress" className="bg-gray-900 w-96 rounded h-10 text-white pl-3 placeholder-white mb-4" />
+          <input data-testid='address' type="text" value={address} onChange={(ev) => setAddress(ev.target.value)} placeholder="Adress" className="bg-gray-900 w-96 rounded h-10 text-white pl-3 placeholder-white mb-4" />
 
           <p className="mb-2 font-bold text-white">Actual plan:</p>
           <div className="flex flex-row p-2 rounded items-center justify-between mb-4 bg-slate-500">
             <p className="font-bold text-white">
               Plan {premium ? 'Premium' : "Free"}
             </p>
-            <a onClick={() => alert('Upgrade account not working')} className="text-lime-400 cursor-pointer">
+            <a data-testid='buttonChangePlan' onClick={() => alert('Upgrade account not working')} className="text-lime-400 cursor-pointer">
               Change plan
             </a>
           </div>

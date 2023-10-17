@@ -9,7 +9,6 @@ interface AuthContextProps {
   isAuthenticated: boolean
   signIn: (credentials: SignInProps) => Promise<void>
   signUp: (credentials: SignUpProps) => Promise<void>
-  logout: () => Promise<void>
 }
 
 interface UserProps {
