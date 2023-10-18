@@ -1,37 +1,36 @@
 import Link from "next/link";
 import { useState } from "react";
-import { IoMdPricetag } from 'react-icons/io'
+import { IoMdPricetag } from "react-icons/io";
 import { onlyUserAuthenticated } from "@/utils/onlyUserAuthenticated";
 import NavBar from "@/components/navbar";
-import { FiChevronLeft } from 'react-icons/fi'
+import { FiChevronLeft } from "react-icons/fi";
 import { setupApiClient } from "@/services/api";
 import Router from "next/router";
 
 interface NewHaircutProps {
-  subscription: boolean,
-  count: number
+  subscription: boolean;
+  count: number;
 }
 
 export default function New({ subscription, count }: NewHaircutProps) {
-  const [nameHaircut, setNameHaircut] = useState('')
-  const [price, setPrice] = useState('')
+  const [nameHaircut, setNameHaircut] = useState("");
+  const [price, setPrice] = useState("");
 
   async function handleRegister() {
-
-    if (nameHaircut === '' || price === '') {
-      return
+    if (nameHaircut === "" || price === "") {
+      return;
     }
     try {
-      const apiClient = setupApiClient()
+      const apiClient = setupApiClient();
 
-      await apiClient.post('/haircut', {
+      await apiClient.post("/haircut", {
         name: nameHaircut,
-        price: Number(price)
-      })
+        price: Number(price),
+      });
 
-      Router.push('/haircuts')
+      Router.push("/haircuts");
     } catch (error) {
-      console.log('Error in register haircut')
+      console.log("Error in register haircut");
     }
   }
 
@@ -40,7 +39,7 @@ export default function New({ subscription, count }: NewHaircutProps) {
       <NavBar />
       <div className="flex flex-col items-center justify-center m-5">
         <div className="flex flex-row items-start max-w-3xl w-screen">
-          <Link href='/haircuts'>
+          <Link href="/haircuts">
             <button className="flex items-center justify-center gap-1 bg-slate-500 rounded w-16 mr-4">
               <FiChevronLeft />
               <p>Back</p>
@@ -53,52 +52,54 @@ export default function New({ subscription, count }: NewHaircutProps) {
           <h1 className="mb-4">Haircuts</h1>
 
           <input
+            data-testid="nameHaircutInput"
             type="text"
             value={nameHaircut}
             onChange={(ev) => setNameHaircut(ev.target.value)}
-            placeholder="Name haircut" className="bg-gray-900 w-4/5 text-sm rounded h-10 text-white pl-3 placeholder-white mb-3" />
+            placeholder="Name haircut"
+            className="bg-gray-900 w-4/5 text-sm rounded h-10 text-white pl-3 placeholder-white mb-3"
+          />
 
           <input
+            data-testid="priceHaircut"
             type="text"
             value={price}
             onChange={(ev) => setPrice(ev.target.value)}
-            placeholder="Value" className="bg-gray-900 w-4/5 text-sm rounded h-10 text-white pl-3 placeholder-white mb-3" />
+            placeholder="Value"
+            className="bg-gray-900 w-4/5 text-sm rounded h-10 text-white pl-3 placeholder-white mb-3"
+          />
 
           <button
             onClick={handleRegister}
-            className="bg-orange-400 rounded h-10 text-lg hover:bg-slate-400 w-4/5" >
+            className="bg-orange-400 rounded h-10 text-lg hover:bg-slate-400 w-4/5"
+          >
             Register
           </button>
-
         </div>
       </div>
     </>
-  )
+  );
 }
 
 //First return getServer and verify if is logged and only then return dashboard
 export const getServerSideProps = onlyUserAuthenticated(async (context) => {
   try {
+    const apiClient = setupApiClient(context);
 
-    const apiClient = setupApiClient(context)
-
-    const res = await apiClient.get('/haircut/check')
-    const countHaircut = await apiClient.get('/haircut/count')
-
+    const res = await apiClient.get("/haircut/check");
+    const countHaircut = await apiClient.get("/haircut/count");
 
     return {
       props: {
-        subscription: res?.data?.subscription?.status === 'active' ? true : false,
-        count: countHaircut.data
-      }
-    }
-
+        subscription:
+          res?.data?.subscription?.status === "active" ? true : false,
+        count: countHaircut.data,
+      },
+    };
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
   return {
-    props: {
-
-    }
-  }
-})
+    props: {},
+  };
+});

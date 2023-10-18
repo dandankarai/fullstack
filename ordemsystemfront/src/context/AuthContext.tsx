@@ -1,104 +1,111 @@
-import { createContext, ReactNode, useContext, useEffect, useState } from 'react'
-import { destroyCookie, setCookie } from 'nookies'
-import Router from 'next/router'
-import { api } from '../services/apiClient'
-
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import { destroyCookie, setCookie } from "nookies";
+import Router from "next/router";
+import { api } from "../services/apiClient";
 
 interface AuthContextProps {
-  user: UserProps
-  isAuthenticated: boolean
-  signIn: (credentials: SignInProps) => Promise<void>
-  signUp: (credentials: SignUpProps) => Promise<void>
+  user: UserProps | undefined;
+  isAuthenticated: boolean;
+  signIn: (credentials: SignInProps) => Promise<void>;
+  signUp: (credentials: SignUpProps) => Promise<void>;
 }
 
 interface UserProps {
-  id: string,
-  name: string,
-  email: string,
-  address: string | null
-  subscriprtion?: SubscriptionsProps | null
+  id: string;
+  name: string;
+  email: string;
+  address: string | null;
+  subscriprtion?: SubscriptionsProps | null;
 }
 
 interface SubscriptionsProps {
-  id: string
-  status: string
+  id: string;
+  status: string;
 }
 
 type AuthProviderProps = {
-  children: ReactNode
-}
+  children: ReactNode;
+};
 
 interface SignUpProps {
-  name: string
-  email: string,
-  password: string
+  name: string;
+  email: string;
+  password: string;
 }
-
 
 interface SignInProps {
-  email: string,
-  password: string
+  email: string;
+  password: string;
 }
 
-export const AuthContext = createContext({} as AuthContextProps)
+export const AuthContext = createContext({} as AuthContextProps);
 
 export function signOut() {
-  console.log('errro')
+  console.log("errro");
   try {
-    destroyCookie(null, '@login.token', { path: '/' })
-    Router.push('/')
+    destroyCookie(null, "@login.token", { path: "/" });
+    Router.push("/");
   } catch (error) {
-    console.log('error', error)
+    console.log("error", error);
   }
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
-
-  const [user, setUser] = useState<UserProps>()
-  const isAuthenticated = !!user
-
+  const [user, setUser] = useState<UserProps>();
+  const isAuthenticated = !!user;
 
   async function signIn({ email, password }: SignInProps) {
     try {
+      const res = api.post("/userSession", {
+        email,
+        password,
+      });
 
-      const res = api.post('/userSession', {
-        email, password
-      })
+      const { id, name, token, subscriprtion, address } = (await res).data;
 
-      const { id, name, token, subscriprtion, address } = (await res).data
-
-      setCookie(undefined, '@login.token', token, {
+      setCookie(undefined, "@login.token", token, {
         maxAge: 60 * 60 * 24 * 30, //expire 1 month
-        path: '/'
-      })
+        path: "/",
+      });
 
       setUser({
-        id, name, email, subscriprtion, address
-      })
+        id,
+        name,
+        email,
+        subscriprtion,
+        address,
+      });
 
-      api.defaults.headers.common['Authorization'] = `Bearer ${token}`
-      Router.push('/dashboard')
+      api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      Router.push("/dashboard");
     } catch (error) {
-      console.log('Erro in signIn')
+      console.log("Erro in signIn");
     }
   }
 
   async function signUp({ name, email, password }: SignUpProps) {
     try {
+      const res = api.post("/users", {
+        name,
+        email,
+        password,
+      });
 
-      const res = api.post('/users', {
-        name, email, password
-      })
-
-      Router.push('/')
+      Router.push("/");
     } catch (error) {
-      console.log('Erro in signUp')
+      console.log("Erro in signUp");
     }
   }
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, signIn, signUp, }}>
+    <AuthContext.Provider value={{ user, isAuthenticated, signIn, signUp }}>
       {children}
     </AuthContext.Provider>
-  )
+  );
 }
