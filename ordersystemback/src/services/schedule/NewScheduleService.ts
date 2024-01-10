@@ -9,7 +9,7 @@ interface NewScheduleServiceProps {
 class NewScheduleService {
   async execute({ user_id, haircut_id, customer }: NewScheduleServiceProps) {
     if (customer === "" || haircut_id === "") {
-      throw new Error("Error in schedule new service");
+      console.error("Error in schedule new service");
     }
 
     const schedule = await prismaClient.service.create({

@@ -3,11 +3,11 @@ import prismaClient from "../../prisma";
 interface UserRequestProps {
   user_id: string;
   name: string;
-  address: string;
+  nameFarm: string;
 }
 
 class UpdateUserService {
-  async execute({ user_id, name, address }: UserRequestProps) {
+  async execute({ user_id, name, nameFarm }: UserRequestProps) {
     try {
       const userAlreadyExist = await prismaClient.user.findFirst({
         where: {
@@ -16,7 +16,7 @@ class UpdateUserService {
       });
 
       if (!userAlreadyExist) {
-        throw new Error("User not exist ");
+        console.error('User not exist')
       }
 
       const userUpdate = await prismaClient.user.update({
@@ -25,19 +25,19 @@ class UpdateUserService {
         },
         data: {
           name,
-          address,
+          nameFarm
         },
         select: {
           name: true,
           email: true,
-          address: true,
+          nameFarm:true
         },
       });
 
       return userUpdate;
     } catch (error) {
       console.log("Error", error);
-      throw new Error("Error an update user");
+      console.error("Error an update user");
     }
   }
 }

@@ -26,7 +26,7 @@ class UpdateHairCutService {
     });
 
     if (user?.subscriptions?.status !== "active") {
-      throw new Error("Not authorized");
+      console.error("Not authorized");
     }
 
     const hairCut = await prismaClient.haircut.update({

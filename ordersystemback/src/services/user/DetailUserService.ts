@@ -10,7 +10,7 @@ class UserDetailService {
         id: true,
         name: true,
         email: true,
-        address: true,
+        nameFarm: true,
         subscriptions: {
           select: {
             id: true,

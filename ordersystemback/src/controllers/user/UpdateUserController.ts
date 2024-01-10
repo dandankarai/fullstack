@@ -3,7 +3,7 @@ import { UpdateUserService } from "./UpdateUserService";
 
 class UpdateUserController {
   async handle(req: Request, res: Response) {
-    const { name, address } = req.body;
+    const { name, nameFarm } = req.body;
 
     const user_id = req.user_id;
 
@@ -12,7 +12,7 @@ class UpdateUserController {
     const user = await updateUser.execute({
       user_id,
       name,
-      address,
+      nameFarm,
     });
 
     return res.json(user);

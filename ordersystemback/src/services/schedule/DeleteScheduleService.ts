@@ -8,7 +8,7 @@ interface DeleteScheduleServiceProps {
 class DeleteScheduleService {
   async execute({ schedule_id, user_id }: DeleteScheduleServiceProps) {
     if (schedule_id === "" || user_id === "") {
-      throw new Error("Error");
+      console.error("Error");
     }
 
     try {
@@ -20,7 +20,7 @@ class DeleteScheduleService {
       });
 
       if (!belongUser) {
-        throw new Error("Not authorized");
+        console.error("Not authorized");
       }
 
       await prismaClient.service.delete({

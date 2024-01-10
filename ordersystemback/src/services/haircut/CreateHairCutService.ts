@@ -9,7 +9,7 @@ interface HairCutRequest {
 class CreateHairCutService {
   async execute({ user_id, name, price }: HairCutRequest) {
     if (!name || !price) {
-      throw new Error("Invalid!!");
+      console.error("Invalid!!");
     }
 
     //Verify how much haircut this user has
@@ -30,7 +30,7 @@ class CreateHairCutService {
 
     // Validation plan free
     if (myHaircuts >= 3 && user?.subscriptions?.status !== "active") {
-      throw new Error("Not authorized");
+      console.error("Not authorized");
     }
 
     const hairCut = await prismaClient.haircut.create({

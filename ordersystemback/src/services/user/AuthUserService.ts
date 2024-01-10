@@ -9,46 +9,46 @@ interface AuthUserRequestProps {
 
 class AuthUserService {
   async execute({ email, password }: AuthUserRequestProps) {
-    const userInfoAuth = await prismaClient.user.findFirst({
+    const user = await prismaClient.user.findFirst({
       where: {
         email: email,
       },
       include: { subscriptions: true },
     });
 
-    if (!userInfoAuth) {
-      throw new Error("Email or Password incorrect");
+    if (!user) {
+      console.error("Email or Password incorrect");
     }
 
-    const passwordMatch = await compare(password, userInfoAuth?.password);
+    const passwordMatch = await compare(password, user?.password);
 
     if (!passwordMatch) {
-      throw new Error("Email or Password incorrect");
+      console.error("Email or Password incorrect");
     }
 
     //Generate user token JWT
     const token = sign(
       {
-        name: userInfoAuth.name,
-        email: userInfoAuth.email,
+        name: user.name,
+        email: user.email,
       },
       process.env.JWT_SECRET,
       {
-        subject: userInfoAuth.id,
+        subject: user.id,
         expiresIn: "30d",
       }
     );
 
     return {
-      id: userInfoAuth?.id,
-      name: userInfoAuth?.name,
-      email: userInfoAuth?.email,
-      address: userInfoAuth?.address,
+      id: user?.id,
+      name: user?.name,
+      email: user?.email,
+      nameFarm: user?.nameFarm,
       token: token,
-      subscription: userInfoAuth?.subscriptions
+      subscription: user?.subscriptions
         ? {
-            id: userInfoAuth?.subscriptions?.id,
-            status: userInfoAuth?.subscriptions?.status,
+            id: user?.subscriptions?.id,
+            status: user?.subscriptions?.status,
           }
         : null,
     };
